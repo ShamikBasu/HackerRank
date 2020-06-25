@@ -1,0 +1,51 @@
+
+/* SHORT PALINDROME
+Consider a string, s, of n lowercase English letters where each character, s_i (0 \le i \textless n), denotes the letter at index i in s. We define an (a,b,c,d) palindromic tuple of s to be a sequence of indices in s satisfying the following criteria:
+
+s_a = s_d, meaning the characters located at indices a and d are the same.
+s_b = s_c, meaning the characters located at indices b and c are the same.
+0 \le a \textless b \textless c \textless d \textless |s|, meaning that a, b, c, and d are ascending in value and are valid indices within string s.
+Given s, find and print the number of (a,b,c,d) tuples satisfying the above conditions. As this value can be quite large, print it modulo 10^9 + 7.*/
+
+Input Format
+A single string denoting s.
+
+Constraints
+1 \le |s| \le 10^6
+It is guaranteed that only contains lowercase English letters.
+
+Output Format
+Print the the number of (a,b,c,d) tuples satisfying the conditions in the Problem Statement above. As this number can be very large, your answer must be modulo (10^9 + 7).
+
+Sample Input 0 : kkkkkkz
+Sample Output 0 :15
+Explanation 0 :The letter z will not be part of a valid tuple because you need at least two of the same character to satisfy the conditions defined above. Because all tuples consisting of four k’s are valid, we just need to find the number of ways that we can choose four of the six k’s. This means our answer is \binom{6}{4}\ mod\ (10^9 + 7) = 15.
+*/
+
+
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String s = input.next();
+        int[] frequency = new int[26];
+        int[][] pair_frequency = new int[26][26];
+        int[] trip_frequency = new int[26];
+        final int CONSTANT = 1000000000+7;
+        int ans = 0;
+        for(char c:s.toCharArray()){
+            ans = (ans+trip_frequency[c-'a'])%CONSTANT;
+            for(int i=0; i<26; i++){
+                trip_frequency[i] = (trip_frequency[i] + pair_frequency[i][c-'a'])%CONSTANT;
+            }
+            for(int i=0; i<26; i++){
+                pair_frequency[i][c-'a'] = (pair_frequency[i][c-'a'] + frequency[i])%CONSTANT;
+            }
+            frequency[c-'a']++;
+        }
+        System.out.println(ans);
+    }
+}
